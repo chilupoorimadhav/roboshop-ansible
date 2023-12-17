@@ -1,0 +1,3 @@
+- name: Test
+  ansibile.builtin.role
+    msg: Hello from catalogue
