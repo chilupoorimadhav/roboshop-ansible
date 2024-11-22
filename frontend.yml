@@ -3,10 +3,10 @@
   become: yes
   tasks:
     - name: Disable Default Nginx
-      ansible.builtin.shell: dnf module disable nginx -y
+      ansible.builtin.command: dnf module disable nginx -y
 
-    - name: Enable Nginx 24 Version
-      ansible.builtin.shell: dnf module enable nginx:1.24 -y
+    - name: Enable Nginx 1.24 Version
+      ansible.builtin.command: dnf module enable nginx:1.24 -y
 
     - name: Install Nginx
       ansible.builtin.dnf:
@@ -18,10 +18,16 @@
         src: nginx.conf
         dest: /etc/nginx/nginx.conf
 
+    - name: Test nginx configuration
+      ansible.builtin.shell: nginx -t
+      register: nginx_config_test
+      failed_when: "'test is successful' not in nginx_config_test.stdout"
+
     - name: Start nginx
-      ansible.builtin.systemd_service:
+      ansible.builtin.systemd:
         name: nginx
         state: started
+
 
 
 
